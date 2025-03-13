@@ -21,18 +21,8 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Gestión de usuarios</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
-        .main-container {
-            border: 2px solid black; /* Borde negro alrededor del contenedor */
-            margin: 20px auto;
-            width: 80%;
-            height: 400px; /* Ajusta la altura del contenedor */
-            overflow-y: auto; /* Habilita el scroll vertical */
-            background-color: #f0f0f0; /* Fondo gris claro */
-            padding: 10px;
-        }
                /* Estilos para el modal */
         .modal {
-            display: none; /* Ocultar el modal por defecto */
             position: fixed;
             z-index: 10;
             left: 0;
@@ -119,20 +109,23 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="main-container">
         <div id="registro-acciones" class="acciones">
             <?php if ($_SESSION['rol'] === 'admin'): ?>
-            <a href="registrar_usuario.php">
+            <a href="#" id="openModalBtn">
                 Registrar
                 <img src="img/registrar.png" width="30" alt="Registrar">
             </a>
             <?php endif; ?>
             <div class="separator"></div>
             <?php if ($_SESSION['rol'] === 'admin'): ?>
-        <a href="usuarios_registrados.php" class="edit-user-btn">
+        <a href="editar_usuario.php" class="edit-user-btn">
              Editar <img src="img/editar.png" width="30" alt="Editar">
         </a>
         <?php endif; ?>
         <div class="separator"></div>
+        <?php if ($_SESSION['rol'] === 'admin'): ?>
             <a href="#eliminar">Eliminar <img src="img/eliminar.png" width="30" alt="Eliminar"></a>
+            <?php endif; ?>
         </div>
+
 
         <div class="container-fluid">
             <br>
@@ -155,6 +148,88 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
         </div>  
     </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closeModalBtn">&times;</span>
+            </div>
+            <h2>Registrar Usuario</h2>
+<form id="registroForm">
+    <div>
+        <label for="nombre">Nombre completo:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+    </div>
+
+    <div>
+        <label for="nombre_usuario">Nombre de usuario:</label>
+        <input type="text" id="nombre_usuario" name="nombre_usuario" placeholder="Nombre de usuario" required>
+    </div>
+
+    <div>
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" id="correo" name="correo" placeholder="Correo" required>
+    </div>
+
+    <div>
+        <label for="clave">Contraseña:</label>
+        <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
+    </div>
+
+    <div>
+        <label for="rol">Rol:</label>
+        <select id="rol" name="rol" required>
+            <option value="usuario">Usuario</option>
+            <option value="admin">Administrador</option>
+            <option value="cliente">Cliente</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" required>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button type="submit">Registrar</button>
+        <button type="button" id="cancelModalBtn">Cancelar</button>
+    </div>
+</form>
+
+        </div>
+    </div>
+
+    <script src="js/registro.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const registerModal = document.getElementById("registerModal");
+        const openModalBtn = document.getElementById("openModalBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const cancelModalBtn = document.getElementById("cancelModalBtn");
+
+        openModalBtn.addEventListener("click", function(event) {
+            event.preventDefault();
+            registerModal.style.display = "block";
+        });
+
+        function closeRegisterModal() {
+            registerModal.style.display = "none";
+        }
+
+        closeModalBtn.addEventListener("click", closeRegisterModal);
+        cancelModalBtn.addEventListener("click", closeRegisterModal);
+
+        window.onclick = function(event) {
+            if (event.target === registerModal) {
+                closeRegisterModal();
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
